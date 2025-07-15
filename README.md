@@ -20,45 +20,45 @@ Built with **NestJS** (backend), **React** (frontend), **MongoDB Atlas**, **Clou
 ---
 
 ## 🗂️ Folder Structure
+```
 nestjs-image-converter/
 │
-├── backend/                  # NestJS API (image processing, job queue)
-│   ├── src/
-│   │   ├── app.module.ts
-│   │   ├── main.ts
-│   │   ├── images/           # Image upload, conversion, and routes
-│   │   │   ├── images.controller.ts
-│   │   │   ├── images.service.ts
-│   │   │   ├── dto/
-│   │   │   │   ├── convert-image.dto.ts
-│   │   │   │   └── predict-size.dto.ts
-│   │   │   ├── schemas/
-│   │   │   │   └── image-job.schema.ts
-│   │   │   └── interfaces/
-│   │   │       └── image-job.interface.ts
-│   │   ├── jobs/             # BullMQ job queue logic
-│   │   │   ├── jobs.processor.ts
-│   │   │   ├── jobs.module.ts
-│   │   │   └── jobs.service.ts
-│   │   ├── utils/            # Helper functions (size prediction, etc.)
-│   │   └── config/           # Configuration (DB, Redis, Cloudinary)
-│   ├── worker/               # BullMQ worker for background processing
-│   │   └── worker.js
-│   ├── .env
-│   ├── package.json
-│   └── ...
+├── backend/ # NestJS API (image processing, job queue)
+│ ├── src/
+│ │ ├── app.module.ts
+│ │ ├── main.ts
+│ │ ├── images/ # Image upload, conversion, and routes
+│ │ │ ├── images.controller.ts
+│ │ │ ├── images.service.ts
+│ │ │ ├── dto/
+│ │ │ │ ├── convert-image.dto.ts
+│ │ │ │ └── predict-size.dto.ts
+│ │ │ ├── schemas/
+│ │ │ │ └── image-job.schema.ts
+│ │ │ └── interfaces/
+│ │ │ └── image-job.interface.ts
+│ │ ├── jobs/ # BullMQ job queue logic
+│ │ │ ├── jobs.processor.ts
+│ │ │ ├── jobs.module.ts
+│ │ │ └── jobs.service.ts
+│ │ ├── utils/ # Helper functions (size prediction, etc.)
+│ │ └── config/ # Configuration (DB, Redis, Cloudinary)
+│ ├── worker/ # BullMQ worker for background processing
+│ │ └── worker.js
+│ ├── .env
+│ ├── package.json
+│ └── ...
 │
-├── frontend/                 # React app (user interface)
-│   ├── src/
-│   ├── public/
-│   ├── package.json
-│   └── ...
+├── frontend/ # React app (user interface)
+│ ├── src/
+│ ├── public/
+│ ├── package.json
+│ └── ...
 │
 ├── .gitignore
 ├── README.md
 └── ...
-
-
+```
 ---
 
 ## 🛠️ Tech Stack
