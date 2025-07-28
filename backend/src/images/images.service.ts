@@ -1,32 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import * as multer from 'multer';
+
+export interface EnqueueResult {
+  writeJobId: string;
+  convertJobId: string;
+  originalUrl: string;
+}
 
 @Injectable()
 export class ImagesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectQueue('write') private writeQueue: Queue,
+    @InjectQueue('convert') private convertQueue: Queue,
+  ) {}
 
-  // ...Other methods...
-
-  /**
-   * Get all converted images and their meta by session ID
-   */
-  async getJobStatusBySession(sessionId: string) {
-    // Assuming you stored sessionId with each image when creating jobs
-    const images = await this.prisma.image.findMany({
-      where: { sessionId },
-      orderBy: { createdAt: 'asc' }
+  async enqueueJobs(
+    file: Express.Multer.File,
+    targetFormat: string,
+    sessionId: string,
+  ): Promise<EnqueueResult> {
+    // 1) Queue write job (save original to DB)
+    const writeJob = await this.writeQueue.add('write', {
+      sessionId,
+      url: file.path, // Cloudinary URL from multer-cloudinary
+      originalName: file.originalname,
+      size: file.size,
+      type: file.mimetype,
+      uniqueName: file.filename,
     });
 
-    // Build response: Only images that have a converted URL (or whatever meta)
-    const converted = images.filter(img => img.convertedUrl).map(img => ({
-      originalName: img.originalName,
-      format: img.targetFormat,
-      url: img.convertedUrl, // This should be set by your BullMQ worker
-    }));
+    // 2) Queue conversion job (download & convert)
+    const convertJob = await this.convertQueue.add('convert', {
+      sessionId,
+      url: file.path,
+      targetFormat,
+    });
 
     return {
-      converted,
-      done: images.length > 0 && images.every(img => img.convertedUrl), // or however you define "all done"
+      writeJobId: writeJob?.id.toString(),
+      convertJobId: convertJob.id.toString(),
+      originalUrl: file.path,
     };
   }
 }

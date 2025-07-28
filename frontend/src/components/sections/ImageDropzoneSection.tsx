@@ -11,6 +11,7 @@ interface Props {
 }
 
 export const ImageDropzoneSection: React.FC<Props> = ({ images, setImages }) => {
+    
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
             const newFiles = acceptedFiles.filter(file =>

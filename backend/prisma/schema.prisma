@@ -1,3 +1,4 @@
+// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,14 +9,16 @@ datasource db {
 }
 
 model Image {
-  id            String   @id @default(uuid()) @map("_id") @db.ObjectId
-  cloudinaryUrl String?
-  originalName  String?
-  uniqueName    String?
-  type          String?
-  size          Int?
-  targetFormat  String?
-  jobId         String?
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId     String
+  cloudinaryUrl String
+  uniqueName    String
+  originalName  String
+  type          String
+  size          Int
+  targetFormat  String
+  jobId         String
+  convertedUrl  String? // will be filled once conversion finishes
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
