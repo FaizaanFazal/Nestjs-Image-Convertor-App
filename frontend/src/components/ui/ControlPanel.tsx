@@ -21,7 +21,11 @@ export const ConvertPanel: React.FC<ConvertPanelProps> = ({ images }) => {
     images.map(img => img.file),
     targetType
   );
-  const isProcessing = converted.length === 0 && images.length > 0;
+  let isProcessing = false
+  const handleConvert=() => {
+    isProcessing = true;
+    startUpload();
+  }
 
   return (
     <div className="flex flex-col md:ml-12 items-center md:items-start mt-8 md:mt-0 w-full">
@@ -40,11 +44,11 @@ export const ConvertPanel: React.FC<ConvertPanelProps> = ({ images }) => {
           ))}
         </select>
         <button
-          onClick={startUpload}
+          onClick={handleConvert}
           disabled={isProcessing || images.length === 0}
           className={`ml-4 px-6 py-3 rounded-2xl bg-purple-600 text-lg font-bold text-white shadow transition 
-            ${isProcessing || images.length === 0 
-              ? "opacity-60 cursor-not-allowed" 
+            ${isProcessing || images.length === 0
+              ? "opacity-60 cursor-not-allowed"
               : "hover:bg-purple-700"}`}
         >
           {isProcessing ? "Processing..." : "Convert"}
