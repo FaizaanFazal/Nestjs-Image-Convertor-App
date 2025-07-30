@@ -1,4 +1,5 @@
 // uploadToCloudinary(file): unsigned upload preset
+
 export async function uploadToCloudinary(file: File): Promise<{
   secure_url: string;
   original_filename: string;

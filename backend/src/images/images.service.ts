@@ -15,35 +15,49 @@ export class ImagesService {
     @InjectQueue('convert') private convertQueue: Queue,
   ) { }
 
-  async enqueueJobs(
-    file: Express.Multer.File,
-    targetFormat: string,
-    sessionId: string,
-  ): Promise<EnqueueResult> {
+  // src/images/images.service.ts
+  async enqueueJobs({
+    url,
+    originalName,
+    format,
+    size,
+    sessionId,
+    targetFormat,
+  }: {
+    url: string;
+    originalName: string;
+    format: string;
+    size: number;
+    sessionId: string;
+    targetFormat: string;
+  }) {
+    // 1. Queue write job
     const writeJob = await this.writeQueue.add('write', {
       sessionId,
-      url: file.path,
-      originalName: file.originalname,
-      size: file.size,
-      type: file.mimetype,
-      uniqueName: file.filename,
+      url,
+      originalName,
+      format,
+      size,
     });
 
+    // 2. Queue convert job
     const convertJob = await this.convertQueue.add('convert', {
       sessionId,
-      url: file.path,
+      url,
       targetFormat,
     });
 
     if (writeJob.id === undefined || convertJob.id === undefined) {
-      throw new Error('Failed to enqueue job(s): missing job id');
+      throw new Error('Job id missing');
     }
 
     return {
       writeJobId: writeJob.id.toString(),
       convertJobId: convertJob.id.toString(),
-      originalUrl: file.path,
+      originalUrl: url,
     };
   }
+
+
 
 }

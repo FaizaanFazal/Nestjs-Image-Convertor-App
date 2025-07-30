@@ -17,15 +17,18 @@ interface ConvertPanelProps {
 
 export const ConvertPanel: React.FC<ConvertPanelProps> = ({ images }) => {
   const [targetType, setTargetType] = useState<string>("jpeg");
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const { converted, errors, startUpload } = useMultiUpload(
     images.map(img => img.file),
     targetType
   );
-  let isProcessing = false
-  const handleConvert=() => {
-    isProcessing = true;
-    startUpload();
-  }
+  
+  const handleConvert = async () => {
+    setIsProcessing(true);
+    await startUpload();
+    setIsProcessing(false);
+  };
 
   return (
     <div className="flex flex-col md:ml-12 items-center md:items-start mt-8 md:mt-0 w-full">
