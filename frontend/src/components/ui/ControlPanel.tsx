@@ -1,8 +1,7 @@
 // src/components/ui/ConvertPanel.tsx
 import { useMultiUpload } from '../../hooks/useMultiUpload';
 import { useState } from 'react';
-import { Download } from "lucide-react";
-import { type GridImage } from "./ImageGrid";
+import { ImageGrid, type GridImage } from "./ImageGrid";
 
 const formats = [
   { label: "JPEG", value: "jpeg" },
@@ -23,11 +22,28 @@ export const ConvertPanel: React.FC<ConvertPanelProps> = ({ images }) => {
     images.map(img => img.file),
     targetType
   );
-  
+
   const handleConvert = async () => {
     setIsProcessing(true);
     await startUpload();
     setIsProcessing(false);
+  };
+
+  const handleDownload = (idx: number) => {
+    const img = converted[idx];
+    const link = document.createElement("a");
+    link.href = img.url;
+    link.download = img?.originalName || `converted_${idx}.${(img?.type || "img")}`;
+    link.click();
+  };
+
+  const handleDownloadAll = () => {
+    converted.forEach((img, idx) => {
+      const link = document.createElement("a");
+      link.href = img.url;
+      link.download = img.originalName || `converted_${idx}.${(img.type || "img")}`;
+      link.click();
+    });
   };
 
   return (
@@ -60,7 +76,7 @@ export const ConvertPanel: React.FC<ConvertPanelProps> = ({ images }) => {
       <div className="text-xs text-gray-500 mb-4">
         Choose format and click convert
       </div>
-      {converted.length > 0 && (
+      {/* {converted.length > 0 && (
         <div className="flex flex-wrap gap-4 mt-2 w-full">
           {converted.map((img, idx) => (
             <div
@@ -83,6 +99,18 @@ export const ConvertPanel: React.FC<ConvertPanelProps> = ({ images }) => {
               </a>
             </div>
           ))}
+        </div>
+      )} */}
+
+      {converted.length > 0 && (
+        <div className="w-full flex flex-col items-center mt-8">
+          <ImageGrid images={converted} onDownload={handleDownload} />
+          <button
+            className="mt-4 px-4 py-2 rounded-xl bg-purple-600 text-white font-bold hover:bg-purple-700 transition"
+            onClick={handleDownloadAll}
+          >
+            Download All
+          </button>
         </div>
       )}
       {errors.length > 0 && (

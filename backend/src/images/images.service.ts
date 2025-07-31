@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bullmq';
+import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bullmq';
 
 export interface EnqueueResult {
@@ -13,7 +13,7 @@ export class ImagesService {
   constructor(
     @InjectQueue('write') private writeQueue: Queue,
     @InjectQueue('convert') private convertQueue: Queue,
-  ) { }
+  ) {}
 
   // src/images/images.service.ts
   async enqueueJobs({
@@ -44,6 +44,7 @@ export class ImagesService {
     const convertJob = await this.convertQueue.add('convert', {
       sessionId,
       url,
+      originalName,
       targetFormat,
     });
 
@@ -57,7 +58,4 @@ export class ImagesService {
       originalUrl: url,
     };
   }
-
-
-
 }

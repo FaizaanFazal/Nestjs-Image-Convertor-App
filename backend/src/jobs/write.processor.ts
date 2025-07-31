@@ -8,6 +8,7 @@ export class WriteProcessor {
 
   @Process('write')
   async handleWrite(job: Job) {
+    console.log('inserting', job.data);
     const { sessionId, url, originalName, size, type, uniqueName } = job.data;
     return this.prisma.image.create({
       data: {

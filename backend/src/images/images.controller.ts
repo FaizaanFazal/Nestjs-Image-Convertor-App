@@ -10,7 +10,8 @@ export class ImagesController {
 
   @Post()
   async receiveImage(
-    @Body() body: {
+    @Body()
+    body: {
       url: string;
       originalName: string;
       format: string;
@@ -21,9 +22,11 @@ export class ImagesController {
     @Res() res: Response,
   ) {
     // Simulate upload by pushing this data through your pipeline
-    console.log(body)
+    console.log('body', body);
     if (!body.url || !body.sessionId || !body.targetFormat) {
-      return res.status(400).json({ error: 'Missing url, sessionId, or targetFormat' });
+      return res
+        .status(400)
+        .json({ error: 'Missing url, sessionId, or targetFormat' });
     }
     const result = await this.imagesService.enqueueJobs(body);
     return res.json(result);

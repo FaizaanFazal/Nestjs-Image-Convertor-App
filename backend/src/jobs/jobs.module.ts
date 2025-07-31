@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bullmq';
+import { BullModule } from '@nestjs/bull';
 import { WriteProcessor } from './write.processor';
 import { ConvertProcessor } from './convert.processor';
 import { EventsModule } from 'src/events/events.module';
@@ -14,7 +14,7 @@ console.log('Redis config:', {
     BullModule.registerQueue(
       {
         name: 'write',
-        connection: {
+        redis: {
           host: process.env.REDIS_HOST,
           port: Number(process.env.REDIS_PORT),
           password: process.env.REDIS_PASSWORD,
@@ -23,7 +23,7 @@ console.log('Redis config:', {
       },
       {
         name: 'convert',
-        connection: {
+        redis: {
           host: process.env.REDIS_HOST,
           port: Number(process.env.REDIS_PORT),
           password: process.env.REDIS_PASSWORD,
@@ -36,4 +36,4 @@ console.log('Redis config:', {
   providers: [WriteProcessor, ConvertProcessor],
   exports: [BullModule],
 })
-export class JobsModule { }
+export class JobsModule {}
