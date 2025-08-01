@@ -1,3 +1,5 @@
+import { API_URL } from "./config";
+
 // src/utils/api.ts
 export interface SendLinkPayload {
   url: string;
@@ -9,7 +11,7 @@ export interface SendLinkPayload {
 }
 
 export async function sendLinkToBackend(payload: SendLinkPayload) {
-  const res = await fetch('/api/images', {
+  const res = await fetch(`${API_URL}/images`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
