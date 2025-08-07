@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bullmq';
+import { PrismaService } from '../prisma/prisma.service'
 
 export interface EnqueueResult {
   writeJobId: string;
@@ -13,6 +14,7 @@ export class ImagesService {
   constructor(
     @InjectQueue('write') private writeQueue: Queue,
     @InjectQueue('convert') private convertQueue: Queue,
+    private readonly  prisma: PrismaService
   ) {}
 
   // src/images/images.service.ts
@@ -57,5 +59,13 @@ export class ImagesService {
       convertJobId: convertJob.id.toString(),
       originalUrl: url,
     };
+  }
+
+
+  // getting alll images
+   async getAllImages() {
+    const data = await this.prisma.image.findMany();
+    console.log('data', data);
+    return data
   }
 }

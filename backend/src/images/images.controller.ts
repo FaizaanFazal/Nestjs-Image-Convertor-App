@@ -1,9 +1,9 @@
 // src/images/images.controller.ts
 
-import { Controller, Post, Body, Res, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, Res, UsePipes, ValidationPipe, Get, UseGuards } from '@nestjs/common';
 import { ImagesService } from './images.service';
 import { CreateImageDto } from './dto/create-image.dto';
-import { Response } from 'express';
+import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 
 @Controller('api/images')
 export class ImagesController {
@@ -14,15 +14,14 @@ export class ImagesController {
   async receiveImage(
     @Body()
     body: CreateImageDto,
-    // @Res() res: Response,
   ) {
-    // // Simulate upload by pushing this data through your pipeline
-    // console.log('body', body);
-    // if (!body.url || !body.sessionId || !body.targetFormat) {
-    //   return res
-    //     .status(400)
-    //     .json({ error: 'Missing url, sessionId, or targetFormat' });
-    // }
-     return await this.imagesService.enqueueJobs(body);
+    return await this.imagesService.enqueueJobs(body);
+  }
+  
+  // using gaurd only on get operation
+  @Get()
+  @UseGuards(ApiKeyGuard)
+  async getAllImages() {
+    return await this.imagesService.getAllImages();
   }
 }
